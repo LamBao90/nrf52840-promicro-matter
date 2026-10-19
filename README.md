@@ -381,3 +381,4 @@ python -m pip install intelhex
 * Dual-slot Matter OTA is not supported (`slot1` is allocated as a minimal placeholder).
 * Firmware updates must be applied manually over USB UF2.
 * Device identifies as `nRF52840-nicenano` in Adafruit UF2 Bootloader context.
+* Need implement sequence to factory reset matter and thread credentials data `chip::Server::GetInstance().ScheduleFactoryReset();`
