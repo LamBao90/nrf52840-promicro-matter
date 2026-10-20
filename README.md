@@ -398,4 +398,4 @@ python -m pip install intelhex
 * Dual-slot Matter OTA is not supported (`slot1` is allocated as a minimal placeholder).
 * Firmware updates must be applied manually over USB UF2.
 * Device identifies as `nRF52840-nicenano` in Adafruit UF2 Bootloader context.
-* In this setup, I didn't use softdevice so BLE DFU not support, you can try to modify flash layout start address from 0x1000 to 0x2600 to keep softdevie and initiate BLE DFU by application logic `NRF_POWER->GPREGRET = 0xA8; // BLUE DFU, 0x57 USB DFU, 0x4e Serial`
+* In this setup, I didn't use softdevice so BLE DFU not support, you can try to modify flash layout start address from 0x1000 to 0x26000 to keep softdevie and initiate BLE DFU by application logic `NRF_POWER->GPREGRET = 0xA8; // BLE DFU, 0x57 USB DFU, 0x4e Serial`
