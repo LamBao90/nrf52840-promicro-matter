@@ -1,0 +1,165 @@
+/*
+ * Copyright (c) 2025 Nordic Semiconductor ASA
+ *
+ * SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
+ */
+
+#include <samples/matter/nrf52840_partitions.dtsi>
+
+/ {
+	chosen {
+		zephyr,code-partition = &boot_partition;
+		//nordic,pm-ext-flash = &mx25r64;
+	};
+
+leds {
+
+		led0: led_0 {
+			gpios = <&gpio0 15 GPIO_ACTIVE_HIGH>;
+			label = "RED LED";
+		};
+		led1: led_1 {
+			gpios = <&gpio0 24 GPIO_ACTIVE_HIGH>;
+			label = "hal pw";
+		};
+		led2: led_2 {
+			gpios = <&gpio0 11 GPIO_ACTIVE_HIGH>;
+			label = "pir pw";
+		};
+		led3: led_3 {
+			gpios = <&gpio0 13 GPIO_ACTIVE_HIGH>;
+			label = "ext pw";
+		};
+
+
+	};
+
+	/* 2. Cấu hình lại Buttons */
+	buttons {
+		compatible = "gpio-keys";
+
+		button0: button_0 {
+			gpios = <&gpio0 17 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+			label = "hal sensor";
+			zephyr,code = <17>;
+		};
+		button1: button_1 {
+			gpios = <&gpio0 20 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+			label = "pir sensor";
+			zephyr,code = <20>;
+		};
+		button2: button_2 {
+			gpios = <&gpio0 22 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+			label = "Factory Reset";
+			zephyr,code = <22>;
+		};
+
+		/delete-node/ button_3;
+    	};
+    	aliases {
+
+		// /delete-property/ led0;
+		/delete-property/ led1;
+		/delete-property/ led2;
+		/delete-property/ led3;
+
+		/delete-property/ pwm-led0;
+		/delete-property/ mcuboot-button0;
+		/delete-property/ mcuboot-led0;
+		/delete-property/ sw0;
+		/delete-property/ sw1;
+		/delete-property/ sw2;
+		/delete-property/ sw3;
+	};
+};
+/delete-node/ &pwm_led0;
+// &uicr {
+//     /delete-property/ gpio-as-nreset;
+// };
+// &gpregret1 {
+// 	//status = "disabled";
+// 	/delete-node/ boot_mode@0;
+// };
+// &gpregret2 {
+//     compatible = "nordic,nrf-gpregret";
+//     reg = <0x40000520 0x1>;
+//     status = "okay";
+//     boot_mode0: boot_mode@0 {
+//         compatible = "zephyr,retention";
+//         reg = <0x0 0x1>;
+//         status = "okay";
+//     };
+// };
+&mx25r64 {
+	status = "disabled";
+};
+
+//disable external flash
+&qspi {
+    status = "disabled";
+    /delete-node/ mx25r6435f@0;
+};
+
+
+&adc {
+    status = "okay";
+    #address-cells = <1>;
+    #size-cells = <0>;
+    channel@0 {
+        reg = <0>;
+        zephyr,gain = "ADC_GAIN_1_6";
+        zephyr,reference = "ADC_REF_INTERNAL";
+        zephyr,acquisition-time = <ADC_ACQ_TIME_DEFAULT>;
+        zephyr,input-positive = <NRF_SAADC_VDDHDIV5>;
+        zephyr,resolution = <12>;
+    };
+};
+
+/delete-node/ &boot_partition;
+/delete-node/ &slot0_partition;
+/delete-node/ &factory_data_partition;
+/delete-node/ &storage_partition;
+&flash0 {
+    partitions {
+        compatible = "fixed-partitions";
+        #address-cells = <1>;
+        #size-cells = <1>;
+		boot_partition: partition@1000 {
+        	compatible = "zephyr,mapped-partition";
+        	label = "mcuboot";
+       		reg = <0x00001000 DT_SIZE_K(28)>;
+    	};
+
+    	slot0_partition: partition@8000 {
+        	compatible = "zephyr,mapped-partition";
+        	label = "image-0";
+        	reg = <0x00008000 DT_SIZE_K(896)>;
+    	};
+		// boot_partition: partition@26000 {
+        //     compatible = "zephyr,mapped-partition";
+        //     label = "mcuboot";
+        //     reg = <0x00026000 DT_SIZE_K(28)>;
+        // };
+
+        // slot0_partition: partition@2d000 {
+        //     compatible = "zephyr,mapped-partition";
+        //     label = "image-0";
+        //     reg = <0x0002D000 DT_SIZE_K(748)>;
+        // };
+		slot1_partition: partition@e8000 {
+			compatible = "zephyr,mapped-partition";
+			label = "image-1";
+			reg = <0x000e8000 DT_SIZE_K(4)>;
+		};
+		factory_data_partition: partition@e9000 {
+			compatible = "zephyr,mapped-partition";
+			label = "factory-data";
+			reg = <0x000e9000 DT_SIZE_K(4)>;
+		};
+		storage_partition: partition@ea000 {
+			compatible = "zephyr,mapped-partition";
+			label = "storage";
+			reg = <0x000ea000 DT_SIZE_K(40)>;
+		};
+    };
+};
