@@ -2,6 +2,23 @@
 Matter contact sensor example on Promicro Board
 > This project ports the Nordic nRF Connect SDK Matter Contact Sensor sample to the nRF52840 ProMicro board. The goal is to run Matter over Thread and use USB DFU/UF2 for flashing firmware to avoid repeated operations on SWD pads.
 
+## 0. Quick start
+Release folder contain
+```text
+relase/
+├── nice_nano_bootloader-0.11.0_s140_6.1.1.hex
+├── uf2.hex
+├── uf2.uf2
+├── factory_data.txt
+├── factory_data.json
+├── factory_data.png
+└── ...
+```
+* Flash adafruit bootloader to your promicro Board
+* Double-tap reset to DFU mode
+* Copy uf2.uf2 to NICENANO flash drive.
+* Add matter device by homeassistant companion app, assume you adredy have working Thread network on your HA, and syn your Thread credentials to `HA companion apps`
+
 ## 1. Overview and Limitations
 
 The original Nordic example targets the nRF52840 DK. ProMicro differs in hardware, particularly regarding external QSPI flash and pin wiring connected to the Adafruit bootloader reset line.
